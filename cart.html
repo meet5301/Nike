@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Cart | Nike</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+
+    .cart-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+    }
+
+    .cart-item img {
+      width: 120px;
+      border-radius: 10px;
+    }
+
+    .item-info {
+      flex: 1;
+      margin-left: 20px;
+    }
+
+    .item-info h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .item-info p {
+      color: #555;
+      margin: 5px 0;
+    }
+
+    .item-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .remove-btn {
+       background-color: rgb(238, 107, 47);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .remove-btn:hover {
+       background-color: rgb(238, 107, 47);
+    }
+
+    .total {
+      text-align: right;
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 30px;
+    }
+
+    .checkout-wrapper {
+      text-align: right;
+      max-width: 900px;
+      margin: 10px auto 40px;
+    }
+
+    .checkout-btn {
+      background-color: rgb(238, 107, 47);
+      color: #fff;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .checkout-btn:hover {
+      background: #333;
+    }
+  </style>
+</head>
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <script>
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("navbar-placeholder").innerHTML = data;
+
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userDisplay = document.getElementById("user-display");
+        const loginLink = document.getElementById("login-link");
+
+        if (isLoggedIn === 'true' && loggedInUser?.username) {
+          userDisplay.textContent = "| " + loggedInUser.username;
+          loginLink.textContent = "Logout";
+          loginLink.href = "#";
+          loginLink.addEventListener("click", () => {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+          });
+        }
+      });
+  </script>
+
+  <div class="cart-container">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <div class="total" id="totalAmount"></div>
+  </div>
+
+  <div class="checkout-wrapper">
+    <button class="checkout-btn" onclick="goToBillPage()">Checkout</button>
+  </div>
+
+  <script>
+    let cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+    const container = document.getElementById('cartItems');
+    const totalAmount = document.getElementById('totalAmount');
+
+    function renderCart() {
+      container.innerHTML = '';
+      let total = 0;
+
+      if (cartItems.length === 0) {
+        container.innerHTML = "<p>Your cart is empty.</p>";
+        totalAmount.textContent = '';
+        return;
+      }
+
+      cartItems.forEach((item, index) => {
+        total += item.price;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `
+          <img src="${item.img}" alt="${item.title}">
+          <div class="item-info">
+            <h3>${item.title} <span style="font-weight: normal; font-size: 16px;">(Size US ${item.size || '-'})</span></h3>
+            <p>Price: $${item.price}</p>
+          </div>
+          <div class="item-actions">
+            <p>$${item.price}</p>
+            <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+          </div>
+        `;
+        container.appendChild(itemDiv);
+      });
+
+      totalAmount.textContent = `Total: $${total}`;
+    }
+
+    function removeItem(index) {
+      cartItems.splice(index, 1);
+      localStorage.setItem('cart', JSON.stringify(cartItems));
+      renderCart();
+    }
+
+    function goToBillPage() {
+      if (cartItems.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+      localStorage.setItem("finalCart", JSON.stringify(cartItems));
+      window.location.href = "bill.html";
+    }
+
+    renderCart();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nike | Men's Shoes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    .hero {
+      background: url('2.jpg') no-repeat center center/cover;
+      height: 120vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .hero h2 {
+      font-size: 48px;
+      padding: 10px 30px;
+      border-radius: 10px;
+      margin-bottom: 370px;
+      margin-right: 700px;
+      color: rgb(238, 107, 47);
+    }
+
+    .section {
+      padding: 40px 60px;
+      text-align: center;
+    }
+
+    .products {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: center;
+    }
+
+    .product-card {
+      width: 250px;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.2s;
+    }
+
+    .product-card:hover {
+      transform: scale(1.03);
+    }
+
+    .product-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .product-card h4 {
+      margin: 15px 0 5px;
+      font-size: 18px;
+    }
+
+    .product-card p {
+      color: #888;
+      font-size: 14px;
+    }
+
+    footer {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 40px 20px;
+      margin-top: 60px;
+    }
+
+    footer a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 5% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 800px;
+      border-radius: 10px;
+      display: flex;
+      gap: 30px;
+      align-items: center;
+      flex-direction: row;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .modal-content img {
+      width: 300px;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .modal-details {
+      flex: 1;
+    }
+
+    .modal-details h2 {
+      margin-top: 0;
+    }
+
+    .modal-details p {
+      font-size: 18px;
+      color: #e53935;
+      margin-bottom: 10px;
+    }
+
+    .modal-details select,
+    .modal-details button {
+      padding: 10px;
+      font-size: 16px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 40px;
+      font-size: 30px;
+      font-weight: bold;
+      color: white;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 768px) {
+      .modal-content {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .modal-content img {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="navbar-placeholder"></div>
+
+  <script>
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("navbar-placeholder").innerHTML = data;
+
+        // Display username if logged in
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userDisplay = document.getElementById("user-display");
+        const loginLink = document.getElementById("login-link");
+
+        if (isLoggedIn === 'true' && loggedInUser?.username) {
+          userDisplay.textContent = "| " + loggedInUser.username;
+          loginLink.textContent = "Logout";
+          loginLink.href = "#";
+          loginLink.addEventListener("click", () => {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+          });
+        }
+      });
+  </script>
+
+  <section class="hero">
+    <h2>Men's Shoes</h2>
+  </section>
+
+  <section class="section">
+    <h3>Popular Picks</h3>
+    <div class="products" id="productGrid"></div>
+  </section>
+
+  <!-- Product Modal -->
+  <div class="modal" id="productModal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div class="modal-content">
+      <img id="modalImage" src="" alt="Shoe">
+      <div class="modal-details">
+        <h2 id="modalTitle"></h2>
+        <p id="modalPrice"></p>
+        <label for="sizeSelect">Size:</label>
+        <select id="sizeSelect">
+          <option value="7">US 7</option>
+          <option value="8">US 8</option>
+          <option value="9">US 9</option>
+          <option value="10">US 10</option>
+          <option value="11">US 11</option>
+        </select>
+        <button id="addToCartBtn">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product loading + modal logic -->
+  <script>
+    const productGrid = document.getElementById('productGrid');
+    const storedProducts = JSON.parse(localStorage.getItem('menShoes')) || [];
+
+    storedProducts.forEach(product => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${product.img}" alt="${product.title}">
+        <h4>${product.title}</h4>
+        <p>$${product.price}</p>
+      `;
+      card.addEventListener('click', () => openModal(product));
+      productGrid.appendChild(card);
+    });
+
+    function openModal(product) {
+      document.getElementById('modalImage').src = product.img;
+      document.getElementById('modalTitle').textContent = product.title;
+      document.getElementById('modalPrice').textContent = "$" + product.price;
+
+      document.getElementById('addToCartBtn').onclick = function () {
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        if (isLoggedIn !== "true") {
+          alert("Please login to add items to cart.");
+          closeModal();
+          window.location.href = "login.html";
+          return;
+        }
+
+        const size = document.getElementById('sizeSelect').value;
+        const cartProduct = { ...product, size };
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        cart.push(cartProduct);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert(`${product.title} (Size US ${size}) added to cart!`);
+        closeModal();
+      };
+
+      document.getElementById('productModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('productModal').style.display = 'none';
+    }
+
+    window.onclick = function (event) {
+      const modal = document.getElementById('productModal');
+      if (event.target == modal) {
+        closeModal();
+      }
+    }
+  </script>
+
+  <footer>
+    <p>&copy; 2025 Nike, Inc. All rights reserved.</p>
+    <div>
+      <a href="#">Contact</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Instagram</a>
+    </div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Feedback | Nike</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f5f5f5 25%, #e0e0e0 100%);
+      background-attachment: fixed;
+    }
+
+    .page-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    #navbar-container {
+      background: #000;
+      color: #fff;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .form-map-wrapper {
+      display: flex;
+      gap: 30px;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .feedback-container {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      flex: 1;
+      border-radius: 15px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(6px);
+      transition: transform 0.3s ease;
+    }
+
+    .feedback-container:hover {
+      transform: translateY(-5px);
+    }
+
+    .map-outside {
+      flex: 1;
+      min-width: 350px;
+    }
+
+    .map-outside iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      border: none;
+      border-radius: 15px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+        color: rgb(238, 107, 47);
+    }
+
+    input[type="text"],
+    input[type="email"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      background-color: #fafafa;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #444;
+    }
+
+    footer {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+    }
+
+    footer a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      color: #e53935;
+    }
+
+    @media (max-width: 768px) {
+      .form-map-wrapper {
+        flex-direction: column;
+      }
+
+      .map-outside iframe {
+        min-height: 300px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-container">
+
+    <div id="navbar-placeholder"></div>
+
+    <script>
+      fetch("navbar.html")
+        .then(res => res.text())
+        .then(data => {
+          document.getElementById("navbar-placeholder").innerHTML = data;
+
+          const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+          const isLoggedIn = localStorage.getItem('isLoggedIn');
+          const userDisplay = document.getElementById("user-display");
+          const loginLink = document.getElementById("login-link");
+
+          if (isLoggedIn === 'true' && loggedInUser?.username) {
+            userDisplay.textContent = "| " + loggedInUser.username;
+            loginLink.textContent = "Logout";
+            loginLink.href = "#";
+            loginLink.addEventListener("click", () => {
+              localStorage.removeItem("isLoggedIn");
+              localStorage.removeItem("loggedInUser");
+              window.location.href = "login.html";
+            });
+          }
+        });
+    </script>
+
+    <main>
+      <div class="form-map-wrapper">
+
+        <!-- Feedback Form Container -->
+        <div class="feedback-container">
+          <h2>We value your feedback</h2>
+          <form id="feedbackForm">
+            <input type="text" name="name" placeholder="Full Name" required>
+            <input type="email" name="email" placeholder="Email Address" required>
+
+            <select name="rating" required>
+              <option value="">Rate Us (1 to 5)</option>
+              <option value="1">1 - Poor</option>
+              <option value="2">2 - Fair</option>
+              <option value="3">3 - Good</option>
+              <option value="4">4 - Very Good</option>
+              <option value="5">5 - Excellent</option>
+            </select>
+
+            <textarea name="message" placeholder="Your message or suggestion..." required></textarea>
+            <button type="submit">Submit Feedback</button>
+          </form>
+        </div>
+
+        <!-- Map Outside the Feedback Container -->
+        <div class="map-outside">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.019144830027!2d-122.4194150846813!3d37.774929779759996!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085808d74d5fefd%3A0xf4b89dbca84bfe84!2sNike!5e0!3m2!1sen!2sin!4v1616330896076!5m2!1sen!2sin"
+            allowfullscreen="" loading="lazy">
+          </iframe>
+        </div>
+
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Nike, Inc. All rights reserved.</p>
+      <div>
+        <a href="#">Contact</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Instagram</a>
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    const form = document.getElementById('feedbackForm');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const feedback = {
+        name: form.name.value,
+        email: form.email.value,
+        rating: form.rating.value,
+        message: form.message.value,
+        date: new Date().toLocaleString()
+      };
+
+      const allFeedback = JSON.parse(localStorage.getItem('feedbackList')) || [];
+      allFeedback.push(feedback);
+      localStorage.setItem('feedbackList', JSON.stringify(allFeedback));
+
+      alert('Thank you for your feedback!');
+      form.reset();
+    });
+  </script>
+
+</body>
+
+</html>

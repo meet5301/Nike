@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | User Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+    }
+
+    header.navbar {
+      background: #000;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #e53935;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #e53935;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #000;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .actions button {
+      padding: 6px 12px;
+      margin: 0 5px;
+      font-size: 14px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .edit-btn {
+      background-color: #1976d2;
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: #e53935;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+<script>
+  fetch("adminnavbar.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar-placeholder").innerHTML = data;
+    });
+</script>
+<div class="container">
+  <h2>Registered Users</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Sample Static Data (Replace with Dynamic Backend Rows) -->
+      <tr>
+        <td>1</td>
+        <td>John Doe</td>
+        <td>john@example.com</td>
+        <td>john123</td>
+        <td class="actions">
+          <button class="edit-btn" onclick="editUser(1)">Edit</button>
+          <button class="delete-btn" onclick="deleteUser(1)">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>Jane Smith</td>
+        <td>jane@example.com</td>
+        <td>jane_s</td>
+        <td class="actions">
+          <button class="edit-btn" onclick="editUser(2)">Edit</button>
+          <button class="delete-btn" onclick="deleteUser(2)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  function editUser(id) {
+    alert("Edit user with ID: " + id);
+    // Replace this with: window.location.href = `edit-user.html?id=${id}`;
+  }
+
+  function deleteUser(id) {
+    if (confirm("Are you sure you want to delete user ID: " + id + "?")) {
+      alert("Deleted user ID: " + id);
+      // Send DELETE request to server here
+    }
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login | Nike</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f2f2f2;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-container {
+      background: #fff;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-container h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #333;
+    }
+
+    .register-link, .ok {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .register-link a, .ok a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .error-message {
+      color: red;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="login-container">
+  <h2>Login</h2>
+  <div class="error-message" id="error"></div>
+  <form id="loginForm">
+    <input type="text" name="username" placeholder="Username" required>
+    <input type="password" name="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+  <div class="register-link">
+    <a href="registration.html">For New User Register</a>
+  </div>
+  <div class="ok">
+    <a href="home.html">Home</a>
+  </div>
+</div>
+
+<script>
+  const loginForm = document.getElementById('loginForm');
+  const errorMsg = document.getElementById('error');
+
+  loginForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const username = loginForm.username.value.trim();
+    const password = loginForm.password.value.trim();
+
+    // Admin check
+    if (username === "admin") {
+      if (password === "789") {
+        localStorage.setItem("isLoggedIn", "true");
+        localStorage.setItem("loggedInUser", JSON.stringify({ username: "admin", isAdmin: true }));
+        window.location.href = "adminhome.html";
+        return;
+      } else {
+        errorMsg.textContent = "Invalid admin password!";
+        return;
+      }
+    }
+
+    // Normal user check
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const foundUser = users.find(user => user.username === username && user.password === password);
+
+    if (foundUser) {
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('loggedInUser', JSON.stringify(foundUser));
+      window.location.href = "home.html";
+    } else {
+      errorMsg.textContent = "Invalid username or password!";
+    }
+  });
+</script>
+
+</body>
+</html>

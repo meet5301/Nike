@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | Feedback Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    header.navbar {
+      background: #000;
+      color: white;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #e53935;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #e53935;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background: #000;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .no-feedback {
+      text-align: center;
+      padding: 20px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+<script>
+  fetch("adminnavbar.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar-placeholder").innerHTML = data;
+    });
+</script>
+
+<div class="container">
+  <h2>User Feedback</h2>
+
+  <table id="feedbackTable">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Email</th>
+        <th>Rating</th>
+        <th>Message</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="feedbackBody">
+      <!-- Feedback rows will be inserted here -->
+    </tbody>
+  </table>
+
+  <div class="no-feedback" id="noData" style="display:none;">
+    No feedback submitted yet.
+  </div>
+</div>
+
+<script>
+  const feedbackList = JSON.parse(localStorage.getItem('feedbackList')) || [];
+  const tbody = document.getElementById('feedbackBody');
+  const noData = document.getElementById('noData');
+
+  if (feedbackList.length === 0) {
+    noData.style.display = 'block';
+  } else {
+    feedbackList.forEach((fb, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${fb.name}</td>
+        <td>${fb.email}</td>
+        <td>${fb.rating}</td>
+        <td>${fb.message}</td>
+        <td>${fb.date}</td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin | Registration Data</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    header.navbar {
+      background: #000;
+      color: #fff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      gap: 25px;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: #e53935;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 80px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      color: #e53935;
+      margin-bottom: 25px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #000;
+      color: #fff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+
+<div id="navbar-placeholder"></div>
+<script>
+  fetch("adminnavbar.html")
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById("navbar-placeholder").innerHTML = data;
+    });
+</script>
+
+<div class="container">
+  <h2>Registration Data</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Username</th>
+        <th>Password</th>
+      </tr>
+    </thead>
+    <tbody id="userTableBody">
+      <!-- Data will load here -->
+    </tbody>
+  </table>
+</div>
+
+<script>
+  const users = JSON.parse(localStorage.getItem('users')) || [];
+  const tableBody = document.getElementById("userTableBody");
+
+  users.forEach((user, index) => {
+    const row = `<tr>
+      <td>${index + 1}</td>
+      <td>${user.fullname}</td>
+      <td>${user.email}</td>
+      <td>${user.username}</td>
+      <td>${user.password}</td>
+    </tr>`;
+    tableBody.innerHTML += row;
+  });
+</script>
+
+</body>
+</html>

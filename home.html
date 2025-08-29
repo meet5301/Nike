@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nike | Home</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #fff;
+      color: #111;
+    }
+
+    /* Product-style Navbar */
+    header {
+      background: #1a1a1a;
+      color: #fff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 24px;
+      letter-spacing: 2px;
+    }
+
+    nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #e53935;
+    }
+
+    .hero {
+      background: url('2.jpg') no-repeat center center/cover;
+      height: 120vh;
+      position: relative;
+      color: rgb(238, 107, 47);
+    }
+
+    .hero div {
+      position: absolute;
+      top: 60px;
+      left: 60px;
+      max-width: 500px;
+      margin-top: 200px;
+      margin-left: 150px;
+    }
+
+    .hero h2 {
+      font-size: 48px;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    .hero a {
+      padding: 12px 30px;
+      background: #fff;
+      color: #000;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+    }
+
+    .section {
+      padding: 60px 80px;
+    }
+
+    .section h3 {
+      font-size: 28px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #000;
+      display: inline-block;
+      padding-bottom: 5px;
+    }
+
+    .products {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .product-card {
+      width: 300px;
+      border: 1px solid #ddd;
+      padding: 25px;
+      text-align: center;
+      border-radius: 10px;
+      background-color: #fafafa;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: auto;
+    }
+
+    .product-card h4 {
+      margin: 15px 0 5px;
+      font-size: 18px;
+    }
+
+    .product-card p {
+      font-size: 16px;
+      color: #888;
+    }
+
+    footer {
+      background: #000;
+      color: #fff;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    footer a {
+      color: #fff;
+      margin: 0 10px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+ 
+<div id="navbar-placeholder"></div>
+
+  <script>
+    fetch("navbar.html")
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("navbar-placeholder").innerHTML = data;
+
+        // Now run the username display logic AFTER navbar loads
+        const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        const userDisplay = document.getElementById("user-display");
+        const loginLink = document.getElementById("login-link");
+
+        if (isLoggedIn === 'true' && loggedInUser?.username) {
+          userDisplay.textContent = "| " + loggedInUser.username;
+          loginLink.textContent = "Logout";
+          loginLink.href = "#";
+          loginLink.addEventListener("click", () => {
+            localStorage.removeItem("isLoggedIn");
+            localStorage.removeItem("loggedInUser");
+            window.location.href = "login.html";
+          });
+        }
+      });
+  </script>
+
+  
+
+
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div>
+      <h2>REVOLUTION IN AIR</h2>
+      <p>Experience the ultimate comfort with Air Max</p>
+      <a href="#">Shop Now</a>
+    </div>
+  </section>
+
+  <!-- Products Section -->
+  <section class="section">
+    <h3>Featured Products</h3>
+    <div class="products">
+      <div class="product-card">
+        <img src="101.jpg" alt="Air Max 90">
+        <h4>Air Max 90</h4>
+        <p>$130</p>
+      </div>
+      <div class="product-card">
+        <img src="107.jpg" alt="Blazer Mid '77">
+        <h4>Nike Court Vision</h4>
+        <p>$100</p>
+      </div>
+      <div class="product-card">
+        <img src="108.jpg" alt="Air Force 1">
+        <h4>Air Force 1</h4>
+        <p>$110</p>
+      </div>
+      <div class="product-card">
+        <img src="104.jpg" alt="React Infinity">
+        <h4>Nike Air Force 1</h4>
+        <p>$160</p>
+      </div>
+      <!-- Add more product cards as needed -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Nike, Inc. All rights reserved.</p>
+    <div>
+      <a href="#">Contact</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Instagram</a>
+    </div>
+  </footer>
+
+</body>
+</html>
